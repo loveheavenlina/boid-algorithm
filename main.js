@@ -8,8 +8,18 @@ const canvas = document.getElementById('boidCanvas');
 const ctx = canvas.getContext('2d');
 
 // 设置画布尺寸
-canvas.width = 800;     // 画布宽度
-canvas.height = 600;    // 画布高度
+function resizeCanvas() {
+    const container = canvas.parentElement;
+    const containerWidth = container.clientWidth;
+    canvas.width = containerWidth;
+    canvas.height = containerWidth * (9/16); // 保持16:9的比例
+}
+
+// 初始设置画布尺寸
+resizeCanvas();
+
+// 监听窗口调整大小事件
+window.addEventListener('resize', resizeCanvas);
 
 // 获取交互控制滑块元素
 const flockSizeSlider = document.getElementById('flockSize');  // 鸟群数量滑块
@@ -21,6 +31,24 @@ const separationSlider = document.getElementById('separation'); // 分离力度�
 // 初始化鸟群
 let flock = [];           // 存储所有boid的数组
 let numBoids = parseInt(flockSizeSlider.value);       // 群体中的个体数量
+
+// 更新控制值显示的函数
+function updateControlValue(slider, value) {
+    const controlItem = slider.closest('.control-item');
+    const valueDisplay = controlItem.querySelector('.value');
+    if (valueDisplay) {
+        valueDisplay.textContent = Number(value).toFixed(1);
+    }
+}
+
+// 为所有滑块添加事件监听器
+[alignSlider, cohesionSlider, separationSlider].forEach(slider => {
+    slider.addEventListener('input', function() {
+        updateControlValue(this, this.value);
+    });
+    // 初始化显示值
+    updateControlValue(slider, slider.value);
+});
 
 // 更新鸟群数量显示
 flockSizeSlider.addEventListener('input', function() {

@@ -4,53 +4,158 @@
     <meta charset="UTF-8">
     <title>Boid Algorithm Simulation</title>
     <style>
-        canvas {
-            border: 1px solid #000;
-            display: block;
-            margin: 20px auto;
-        }
         body {
             background-color: #f0f0f0;
             display: flex;
             flex-direction: column;
             align-items: center;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .canvas-container {
+            width: 90%;
+            max-width: 1600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16/9;
+            display: block;
+            background-color: #1a1a1a;
+            border-radius: 8px;
         }
         .controls {
-            margin: 10px;
-            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 30px;
             background: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .control-item {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            transition: background-color 0.2s;
         }
-        .controls label {
+        .control-item:hover {
+            background: #f0f0f0;
+        }
+        .control-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
         }
         input[type="range"] {
-            width: 200px;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
         }
-        #flockSizeValue {
-            min-width: 30px;
-            display: inline-block;
-            margin-left: 5px;
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border: none;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #45a049;
+        }
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #45a049;
+        }
+        #flockSizeValue,
+        .value {
+            background: #4CAF50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            min-width: 40px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%;
         }
     </style>
 </head>
 <body>
     <h1>Boid Algorithm Simulation</h1>
     <div class="controls">
-        <label>Flock Size: <input type="range" id="flockSize" min="10" max="500" step="1" value="100"></label>
-        <span id="flockSizeValue">100</span>
-        <label>Alignment: <input type="range" id="alignment" min="0" max="2" step="0.1" value="1"></label>
-        <label>Cohesion: <input type="range" id="cohesion" min="0" max="2" step="0.1" value="1"></label>
-        <label>Separation: <input type="range" id="separation" min="0" max="2" step="0.1" value="1"></label>
+        <div class="control-item">
+            <div class="control-header">
+                <span>Flock Size</span>
+                <span id="flockSizeValue">100</span>
+            </div>
+            <input type="range" id="flockSize" min="10" max="500" step="1" value="100">
+        </div>
+        <div class="control-item">
+            <div class="control-header">
+                <span>Alignment</span>
+                <span class="value">1.0</span>
+            </div>
+            <input type="range" id="alignment" min="0" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-item">
+            <div class="control-header">
+                <span>Cohesion</span>
+                <span class="value">1.0</span>
+            </div>
+            <input type="range" id="cohesion" min="0" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-item">
+            <div class="control-header">
+                <span>Separation</span>
+                <span class="value">1.0</span>
+            </div>
+            <input type="range" id="separation" min="0" max="2" step="0.1" value="1">
+        </div>
     </div>
-    <canvas id="boidCanvas"></canvas>
+    <div class="canvas-container">
+        <canvas id="boidCanvas"></canvas>
+    </div>
     <script src="boid.js"></script>
     <script src="main.js"></script>
 </body>
