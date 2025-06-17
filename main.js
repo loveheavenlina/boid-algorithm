@@ -12,14 +12,35 @@ canvas.width = 800;     // 画布宽度
 canvas.height = 600;    // 画布高度
 
 // 获取交互控制滑块元素
-// 这些滑块用于实时调整群体行为的参数
+const flockSizeSlider = document.getElementById('flockSize');  // 鸟群数量滑块
+const flockSizeValue = document.getElementById('flockSizeValue'); // 显示数量的元素
 const alignSlider = document.getElementById('alignment');      // 对齐力度滑块
 const cohesionSlider = document.getElementById('cohesion');    // 内聚力度滑块
 const separationSlider = document.getElementById('separation'); // 分离力度滑块
 
 // 初始化鸟群
-const flock = [];           // 存储所有boid的数组
-const numBoids = 100;       // 群体中的个体数量
+let flock = [];           // 存储所有boid的数组
+let numBoids = parseInt(flockSizeSlider.value);       // 群体中的个体数量
+
+// 更新鸟群数量显示
+flockSizeSlider.addEventListener('input', function() {
+    const newSize = parseInt(this.value);
+    flockSizeValue.textContent = newSize;
+    
+    // 调整鸟群大小
+    if (newSize > flock.length) {
+        // 添加新的boid
+        while (flock.length < newSize) {
+            flock.push(new Boid(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height
+            ));
+        }
+    } else if (newSize < flock.length) {
+        // 移除多余的boid
+        flock = flock.slice(0, newSize);
+    }
+});
 
 // 初始化群体中的每个boid
 // 随机分布在画布范围内
