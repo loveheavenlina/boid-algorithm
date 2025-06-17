@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Boid Algorithm Simulation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             background-color: #f0f0f0;
@@ -15,9 +17,52 @@
             min-height: 100vh;
             box-sizing: border-box;
         }
-        .canvas-container {
+        
+        .tab-container {
             width: 90%;
             max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tab-button.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        .tab-content {
+            display: none;
+            width: 100%;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .canvas-container {
+            width: 100%;
             margin: 20px auto;
             background: white;
             border-radius: 10px;
@@ -25,6 +70,7 @@
             padding: 0px;
             box-sizing: border-box;
         }
+        
         canvas {
             width: 100%;
             height: auto;
@@ -33,9 +79,13 @@
             background-color: #1a1a1a;
             border-radius: 8px;
         }
+
+        .canvas-3d {
+            background-color: #000;
+        }
+        
         .controls {
-            width: 90%;
-            max-width: 1200px;
+            width: 100%;
             margin: 20px auto;
             padding: 30px;
             background: white;
@@ -105,6 +155,7 @@
             background: #45a049;
         }
         #flockSizeValue,
+        #flockSize3DValue,
         .value {
             background: #4CAF50;
             color: white;
@@ -123,40 +174,146 @@
 </head>
 <body>
     <h1>Boid Algorithm Simulation</h1>
-    <div class="controls">
-        <div class="control-item">
-            <div class="control-header">
-                <span>Flock Size</span>
-                <span id="flockSizeValue">100</span>
-            </div>
-            <input type="range" id="flockSize" min="10" max="500" step="1" value="100">
+    
+    <div class="tab-container">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="2d">2D Simulation</button>
+            <button class="tab-button" data-tab="3d">3D Simulation</button>
         </div>
-        <div class="control-item">
-            <div class="control-header">
-                <span>Alignment</span>
-                <span class="value">1.0</span>
+
+        <!-- 2D Tab Content -->
+        <div class="tab-content active" id="2d-content">
+            <div class="controls">
+                <div class="control-item">
+                    <div class="control-header">
+                        <span>Flock Size</span>
+                        <span id="flockSizeValue">100</span>
+                    </div>
+                    <input type="range" id="flockSize" min="10" max="500" step="1" value="100">
+                </div>
+                <div class="control-item">
+                    <div class="control-header">
+                        <span>Alignment</span>
+                        <span class="value">1.0</span>
+                    </div>
+                    <input type="range" id="alignment" min="0" max="2" step="0.1" value="1">
+                </div>
+                <div class="control-item">
+                    <div class="control-header">
+                        <span>Cohesion</span>
+                        <span class="value">1.0</span>
+                    </div>
+                    <input type="range" id="cohesion" min="0" max="2" step="0.1" value="1">
+                </div>
+                <div class="control-item">
+                    <div class="control-header">
+                        <span>Separation</span>
+                        <span class="value">1.0</span>
+                    </div>
+                    <input type="range" id="separation" min="0" max="2" step="0.1" value="1">
+                </div>
             </div>
-            <input type="range" id="alignment" min="0" max="2" step="0.1" value="1">
+            <div class="canvas-container">
+                <canvas id="boidCanvas"></canvas>
+            </div>
         </div>
-        <div class="control-item">
-            <div class="control-header">
-                <span>Cohesion</span>
-                <span class="value">1.0</span>
+
+        <!-- 3D Tab Content -->
+        <div class="tab-content" id="3d-content">
+            <div class="controls">
+                <div class="control-item">
+                    <div class="control-header">
+                        <span>3D Flock Size</span>
+                        <span id="flockSize3DValue">100</span>
+                    </div>
+                    <input type="range" id="flockSize3D" min="10" max="500" step="1" value="100">
+                </div>
+                <div class="control-item">
+                    <div class="control-header">
+                        <span>3D Alignment</span>
+                        <span class="value">1.0</span>
+                    </div>
+                    <input type="range" id="alignment3D" min="0" max="2" step="0.1" value="1">
+                </div>
+                <div class="control-item">
+                    <div class="control-header">
+                        <span>3D Cohesion</span>
+                        <span class="value">1.0</span>
+                    </div>
+                    <input type="range" id="cohesion3D" min="0" max="2" step="0.1" value="1">
+                </div>
+                <div class="control-item">
+                    <div class="control-header">
+                        <span>3D Separation</span>
+                        <span class="value">1.0</span>
+                    </div>
+                    <input type="range" id="separation3D" min="0" max="2" step="0.1" value="1">
+                </div>
             </div>
-            <input type="range" id="cohesion" min="0" max="2" step="0.1" value="1">
-        </div>
-        <div class="control-item">
-            <div class="control-header">
-                <span>Separation</span>
-                <span class="value">1.0</span>
+            <div class="canvas-container">
+                <canvas id="boidCanvas3D" class="canvas-3d"></canvas>
             </div>
-            <input type="range" id="separation" min="0" max="2" step="0.1" value="1">
         </div>
     </div>
-    <div class="canvas-container">
-        <canvas id="boidCanvas"></canvas>
-    </div>
+
+    <script src="Vector3D.js"></script>
     <script src="boid.js"></script>
+    <script src="boid3D.js"></script>
     <script src="main.js"></script>
+    <script src="main3D.js"></script>
+    <script>
+        // Tab switching logic
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab + '-content').classList.add('active');
+            });
+        });
+        
+        // 2D和3D滑块事件监听器
+        document.addEventListener('DOMContentLoaded', () => {
+            // 2D滑块
+            ['alignment', 'cohesion', 'separation'].forEach(id => {
+                const slider = document.getElementById(id);
+                if (slider) {
+                    const valueElement = slider.parentElement.querySelector('.control-header .value');
+                    slider.addEventListener('input', function() {
+                        valueElement.textContent = parseFloat(this.value).toFixed(1);
+                    });
+                }
+            });
+            
+            // 3D滑块
+            ['alignment3D', 'cohesion3D', 'separation3D'].forEach(id => {
+                const slider = document.getElementById(id);
+                if (slider) {
+                    const valueElement = slider.parentElement.querySelector('.control-header .value');
+                    slider.addEventListener('input', function() {
+                        valueElement.textContent = parseFloat(this.value).toFixed(1);
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        // Debug code
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Checking 2D dependencies:');
+            console.log('Canvas loaded:', document.getElementById('boidCanvas') !== null);
+            console.log('Boid loaded:', typeof Boid !== 'undefined');
+            console.log('Vector loaded:', typeof Vector !== 'undefined');
+            
+            console.log('Checking 3D dependencies:');
+            console.log('THREE.js loaded:', typeof THREE !== 'undefined');
+            console.log('OrbitControls loaded:', typeof THREE.OrbitControls !== 'undefined');
+            console.log('Vector3D loaded:', typeof Vector3D !== 'undefined');
+            console.log('Boid3D loaded:', typeof Boid3D !== 'undefined');
+        });
+    </script>
 </body>
 </html>
