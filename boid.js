@@ -201,7 +201,96 @@ class Boid {
         this.acceleration.add(alignment);
         this.acceleration.add(cohesion);
         this.acceleration.add(separation);
-    }    
+    }
+
+    /**
+     * 性能优化版本的群体行为计算
+     * 使用缓存的滑块值和距离平方计算来提升性能
+     * @param {Array<Boid>} boids - 邻近的boids数组（通过空间网格预过滤）
+     * @param {number} alignWeight - 对齐权重
+     * @param {number} cohesionWeight - 内聚权重 
+     * @param {number} separationWeight - 分离权重
+     */
+    flockOptimized(boids, alignWeight, cohesionWeight, separationWeight) {
+        // 一次遍历计算所有三种行为力，减少循环次数
+        let alignSum = new Vector(0, 0);
+        let cohesionSum = new Vector(0, 0);  
+        let separationSum = new Vector(0, 0);
+        
+        let alignCount = 0;
+        let cohesionCount = 0;
+        let separationCount = 0;
+        
+        // 感知半径的平方，避免开方运算
+        const alignRadiusSq = 50 * 50;
+        const cohesionRadiusSq = 100 * 100;
+        const separationRadiusSq = 50 * 50;
+        
+        // 一次遍历计算所有行为
+        for (let other of boids) {
+            if (other === this) continue;
+            
+            // 使用距离平方避免昂贵的开方运算
+            const dx = this.position.x - other.position.x;
+            const dy = this.position.y - other.position.y;
+            const distSq = dx * dx + dy * dy;
+            
+            // 对齐行为
+            if (distSq < alignRadiusSq) {
+                alignSum.add(other.velocity);
+                alignCount++;
+            }
+            
+            // 内聚行为
+            if (distSq < cohesionRadiusSq) {
+                cohesionSum.add(other.position);
+                cohesionCount++;
+            }
+            
+            // 分离行为
+            if (distSq < separationRadiusSq) {
+                const diff = Vector.sub(this.position, other.position);
+                diff.div(distSq); // 使用距离平方
+                separationSum.add(diff);
+                separationCount++;
+            }
+        }
+        
+        // 计算最终的转向力
+        let alignment = new Vector(0, 0);
+        if (alignCount > 0) {
+            alignSum.div(alignCount);
+            alignSum.setMag(this.maxSpeed);
+            alignment = Vector.sub(alignSum, this.velocity);
+            alignment.limit(this.maxForce);
+        }
+        
+        let cohesion = new Vector(0, 0);
+        if (cohesionCount > 0) {
+            cohesionSum.div(cohesionCount);
+            cohesionSum.sub(this.position);
+            cohesionSum.setMag(this.maxSpeed);
+            cohesion = Vector.sub(cohesionSum, this.velocity);
+            cohesion.limit(this.maxForce);
+        }
+        
+        let separation = new Vector(0, 0);
+        if (separationCount > 0) {
+            separationSum.div(separationCount);
+            separationSum.setMag(this.maxSpeed);
+            separation = Vector.sub(separationSum, this.velocity);
+            separation.limit(this.maxForce);
+        }
+        
+        // 应用权重并累加到加速度
+        alignment.mult(alignWeight);
+        cohesion.mult(cohesionWeight);
+        separation.mult(separationWeight);
+        
+        this.acceleration.add(alignment);
+        this.acceleration.add(cohesion);
+        this.acceleration.add(separation);
+    }
     
     /**
      * 更新Boid的位置和速度

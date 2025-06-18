@@ -172,4 +172,45 @@ class Vector3D {
     toString() {
         return `Vector3D(${this.x.toFixed(2)}, ${this.y.toFixed(2)}, ${this.z.toFixed(2)})`;
     }
+
+    /**
+     * 设置向量的长度
+     * @param {number} mag - 目标长度
+     */
+    setMag(mag) {
+        const currentMag = this.magnitude();
+        if (currentMag === 0) {
+            this.x = mag;
+            this.y = 0;
+            this.z = 0;
+        } else {
+            const factor = mag / currentMag;
+            this.x *= factor;
+            this.y *= factor;
+            this.z *= factor;
+        }
+    }
+
+    /**
+     * 静态方法：计算两个向量之间的平方距离
+     * @param {Vector3D} v1 - 第一个向量
+     * @param {Vector3D} v2 - 第二个向量
+     * @returns {number} 平方距离值
+     */
+    static distSq(v1, v2) {
+        const dx = v1.x - v2.x;
+        const dy = v1.y - v2.y;
+        const dz = v1.z - v2.z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    /**
+     * 静态方法：向量减法
+     * @param {Vector3D} v1 - 第一个向量
+     * @param {Vector3D} v2 - 第二个向量
+     * @returns {Vector3D} 新的向量结果
+     */
+    static sub(v1, v2) {
+        return new Vector3D(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+    }
 } 

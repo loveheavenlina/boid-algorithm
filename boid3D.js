@@ -243,4 +243,87 @@ class Boid3D {
         if (this.geometry) this.geometry.dispose();
         if (this.material) this.material.dispose();
     }
+
+    /**
+     * 优化版群体行为方法
+     * 通过单次遍历计算所有行为，减少循环次数
+     * @param {Array} nearbyBoids - 附近的鸟群数组
+     * @param {number} alignmentWeight - 对齐权重
+     * @param {number} cohesionWeight - 聚合权重
+     * @param {number} separationWeight - 分离权重
+     */
+    flockOptimized(nearbyBoids, alignmentWeight = 1, cohesionWeight = 1, separationWeight = 1) {
+        // 初始化累积变量
+        let alignmentSteer = new Vector3D(0, 0, 0);
+        let cohesionSteer = new Vector3D(0, 0, 0);
+        let separationSteer = new Vector3D(0, 0, 0);
+        
+        let alignmentCount = 0;
+        let cohesionCount = 0;
+        let separationCount = 0;
+        
+        const perceptionRadiusSq = this.perceptionRadius * this.perceptionRadius;
+        const separationRadiusSq = (this.perceptionRadius * 0.5) * (this.perceptionRadius * 0.5);
+        
+        // 单次遍历处理所有行为
+        for (let other of nearbyBoids) {
+            if (other === this) continue;
+            
+            const d = Vector3D.distSq(this.position, other.position);
+            
+            // 分离行为 - 距离较近的邻居
+            if (d < separationRadiusSq && d > 0) {
+                let diff = Vector3D.sub(this.position, other.position);
+                diff.div(d); // 根据距离加权，距离越近影响越大
+                separationSteer.add(diff);
+                separationCount++;
+            }
+            
+            // 对齐和聚合行为 - 感知范围内的邻居
+            if (d < perceptionRadiusSq) {
+                // 对齐：累积速度
+                alignmentSteer.add(other.velocity);
+                alignmentCount++;
+                
+                // 聚合：累积位置
+                cohesionSteer.add(other.position);
+                cohesionCount++;
+            }
+        }
+        
+        let steering = new Vector3D(0, 0, 0);
+        
+        // 处理对齐
+        if (alignmentCount > 0) {
+            alignmentSteer.div(alignmentCount);
+            alignmentSteer.setMag(this.maxSpeed);
+            alignmentSteer.sub(this.velocity);
+            alignmentSteer.limit(this.maxForce);
+            alignmentSteer.mult(alignmentWeight);
+            steering.add(alignmentSteer);
+        }
+        
+        // 处理聚合
+        if (cohesionCount > 0) {
+            cohesionSteer.div(cohesionCount);
+            cohesionSteer.sub(this.position);
+            cohesionSteer.setMag(this.maxSpeed);
+            cohesionSteer.sub(this.velocity);
+            cohesionSteer.limit(this.maxForce);
+            cohesionSteer.mult(cohesionWeight);
+            steering.add(cohesionSteer);
+        }
+        
+        // 处理分离
+        if (separationCount > 0) {
+            separationSteer.div(separationCount);
+            separationSteer.setMag(this.maxSpeed);
+            separationSteer.sub(this.velocity);
+            separationSteer.limit(this.maxForce);
+            separationSteer.mult(separationWeight);
+            steering.add(separationSteer);
+        }
+        
+        this.acceleration.add(steering);
+    }
 } 
