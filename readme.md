@@ -47,7 +47,7 @@ boid-algorithm/
 
 1. **克隆项目**
    ```bash
-   git clone https://github.com/yourusername/boid-algorithm.git
+   git clone https://github.com/loveheavenlina/boid-algorithm.git
    cd boid-algorithm
    ```
 
@@ -165,8 +165,8 @@ draw(ctx) {
 
 ## 📞 联系方式
 
-- 项目链接: [https://github.com/yourusername/boid-algorithm](https://github.com/yourusername/boid-algorithm)
-- 问题反馈: [Issues](https://github.com/yourusername/boid-algorithm/issues)
+- 项目链接: [https://github.com/loveheavenlina/boid-algorithm](https://github.com/loveheavenlina/boid-algorithm)
+- 问题反馈: [Issues](https://github.com/loveheavenlina/boid-algorithm/issues)
 
 ## 🙏 致谢
 
