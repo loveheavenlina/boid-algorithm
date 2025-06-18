@@ -1,0 +1,323 @@
+/* 
+ * Boid Algorithm Simulation - 样式文件
+ * 包含2D/3D鸟群算法模拟器的所有样式
+ */
+
+/* 基础样式 */
+body {
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* 标签页容器 */
+.tab-container {
+    width: 90%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* 标签页导航 */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    padding: 12px 24px;
+    background: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #666;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.tab-button.active {
+    background: #4CAF50;
+    color: white;
+}
+
+.tab-button:hover:not(.active) {
+    background: #f0f0f0;
+}
+
+/* 标签页内容 */
+.tab-content {
+    display: none;
+    width: 100%;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 画布容器 */
+.canvas-container {
+    width: 100%;
+    margin: 20px auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+/* 画布样式 */
+canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+    display: block;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+}
+
+.canvas-3d {
+    background-color: #000;
+}
+
+/* 控制面板 */
+.controls {
+    width: 100%;
+    margin: 20px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.control-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 15px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.control-item:hover {
+    background: #f0f0f0;
+}
+
+.control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+/* 滑块样式 */
+input[type="range"] {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #ddd;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+input[type="range"]:hover {
+    opacity: 1;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #45a049;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    background: #45a049;
+}
+
+/* 数值显示 */
+#flockSizeValue,
+#flockSize3DValue,
+.value {
+    background: #4CAF50;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* 标题 */
+h1 {
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+/* 性能监控面板样式 */
+.performance-panel {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    min-width: 250px;
+    z-index: 1000;
+    border: 2px solid #4CAF50;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: block; /* 默认显示 */
+}
+
+.performance-panel.hidden {
+    display: none;
+}
+
+.performance-panel h4 {
+    margin: 0 0 15px 0;
+    color: #4CAF50;
+    text-align: center;
+    font-size: 14px;
+    border-bottom: 1px solid #4CAF50;
+    padding-bottom: 8px;
+}
+
+.performance-panel .metric {
+    margin: 8px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.performance-panel .metric .label {
+    font-weight: bold;
+    color: #ccc;
+}
+
+.performance-panel .metric .value {
+    /* color: #4CAF50; */
+    font-weight: bold;
+}
+
+.performance-panel .metric.warning .value {
+    color: #ff9800;
+    animation: pulse 1s infinite;
+}
+
+.performance-panel .metric.error .value {
+    color: #f44336;
+    animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.performance-toggle {
+    position: fixed;
+    top: 10px;
+    right: 280px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    z-index: 1001;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.performance-toggle:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+}
+
+/* 性能优化提示 */
+.performance-tips {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+    font-size: 11px;
+    color: #aaa;
+}
+
+.performance-tips .tip {
+    margin: 4px 0;
+    padding: 2px 0;
+}
+
+.performance-tips .tip.active {
+    color: #4CAF50;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .tab-container {
+        width: 95%;
+    }
+    
+    .controls {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+    
+    .performance-panel {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 20px auto;
+        max-width: 90%;
+    }
+    
+    .performance-toggle {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 10px auto;
+        display: block;
+    }
+} 

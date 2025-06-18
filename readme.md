@@ -1,128 +1,175 @@
-# 鸟群算法模拟器 (Boid Algorithm Simulation)
+# Boid Algorithm Simulator
 
-## 项目概述
+一个基于JavaScript的鸟群算法（Boids Algorithm）模拟器，支持2D和3D可视化。该项目展示了生物群体行为的仿真，包括聚集、对齐和分离三种基本行为。
 
-这是一个基于JavaScript实现的鸟群算法(Boid Algorithm)可视化模拟器，展示了Craig Reynolds在1986年提出的经典群体行为模型。项目提供了2D和3D两种可视化模式，用户可以实时调整参数观察群体行为的变化。
+## 🌟 功能特点
 
-## 需求要点
+- **双模式支持**: 支持2D Canvas和3D Three.js渲染
+- **实时控制**: 可调节群体大小和行为参数
+- **性能监控**: 内置性能监控系统，实时显示FPS、内存使用等
+- **空间优化**: 使用空间网格优化算法，支持大规模群体模拟
+- **响应式设计**: 适配不同屏幕尺寸
+- **清晰的代码结构**: 模块化设计，易于扩展和维护
 
-### 核心功能需求
-1. **鸟群三大基本行为**：
-   - **分离(Separation)**: 个体避免与邻近个体发生碰撞
-   - **对齐(Alignment)**: 个体与邻近个体保持相同的运动方向
-   - **内聚(Cohesion)**: 个体向邻近个体的平均位置靠拢
-
-2. **可视化需求**：
-   - 支持2D Canvas渲染的平面模拟
-   - 支持3D WebGL渲染的立体模拟
-   - 实时动画显示群体运动轨迹
-
-3. **交互控制需求**：
-   - 实时调整群体数量(10-500个个体)
-   - 动态调整三种行为力的权重(0-2.0)
-   - 标签页切换2D/3D视图模式
-
-4. **性能需求**：
-   - 流畅的动画帧率
-   - 支持大规模群体(最多500个个体)
-   - 优化的碰撞检测算法
-
-## 技术实现
-
-### 架构设计
+## 📁 项目结构
 
 ```
-项目结构：
-├── index.html          # 主页面，包含UI控制面板
-├── boid.js            # 2D鸟群个体类实现
-├── boid3D.js          # 3D鸟群个体类实现
-├── Vector3D.js        # 3D向量数学运算库
-├── main.js            # 2D场景主控制逻辑
-├── main3D.js          # 3D场景主控制逻辑
-└── readme.md          # 项目文档
+boid-algorithm/
+├── index.html              # 主页面文件
+├── package.json            # 项目配置文件
+├── README.md              # 项目说明文档
+├── docs/                  # 文档目录
+│   └── readme.md         # 详细文档
+└── src/                   # 源代码目录
+    ├── css/              # 样式文件
+    │   └── styles.css    # 主样式文件
+    ├── js/               # JavaScript文件
+    │   ├── 2d/           # 2D模拟相关文件
+    │   │   ├── boid.js   # 2D鸟群类定义
+    │   │   └── main.js   # 2D主程序
+    │   ├── 3d/           # 3D模拟相关文件
+    │   │   ├── boid3D.js # 3D鸟群类定义
+    │   │   └── main3D.js # 3D主程序
+    │   └── utils/        # 工具类
+    │       ├── Vector3D.js           # 3D向量数学库
+    │       └── performance-monitor.js # 性能监控系统
+    └── assets/           # 静态资源目录（预留）
 ```
+
+## 🚀 快速开始
+
+### 环境要求
+
+- 现代浏览器（支持HTML5 Canvas和WebGL）
+- 本地HTTP服务器（用于开发）
+
+### 安装与运行
+
+1. **克隆项目**
+   ```bash
+   git clone https://github.com/yourusername/boid-algorithm.git
+   cd boid-algorithm
+   ```
+
+2. **启动本地服务器**
+   
+   使用Python (推荐):
+   ```bash
+   # Python 3
+   python -m http.server 8000
+   
+   # Python 2
+   python -SimpleHTTPServer 8000
+   ```
+   
+   或使用Node.js:
+   ```bash
+   npx http-server -p 8000
+   ```
+
+3. **打开浏览器**
+   
+   访问 `http://localhost:8000` 即可查看模拟器
+
+## 🎮 使用说明
+
+### 界面说明
+
+- **标签切换**: 在2D和3D模式间切换
+- **控制面板**: 调节群体大小和行为参数
+- **性能监控**: 右上角显示实时性能数据
+- **参数调节**: 
+  - **Flock Size**: 群体大小（10-500）
+  - **Alignment**: 对齐强度（0-2）
+  - **Cohesion**: 聚集强度（0-2）
+  - **Separation**: 分离强度（0-2）
+
+### 鸟群算法原理
+
+鸟群算法基于三个简单规则：
+
+1. **分离 (Separation)**: 避免与邻近个体碰撞
+2. **对齐 (Alignment)**: 与邻近个体保持相同方向
+3. **聚集 (Cohesion)**: 向邻近个体的中心位置移动
+
+## 🔧 技术架构
 
 ### 核心技术栈
 
-- **前端框架**: 原生JavaScript (ES6+)
-- **2D渲染**: HTML5 Canvas API
-- **3D渲染**: Three.js WebGL库
-- **数学计算**: 自定义Vector和Vector3D向量类
-- **界面控制**: HTML5 Range滑块 + CSS3样式
+- **前端渲染**: HTML5 Canvas (2D) + Three.js (3D)
+- **JavaScript**: ES6+ 语法，模块化设计
+- **CSS**: 响应式布局，现代UI设计
+- **性能优化**: 空间网格分割，帧率监控
 
-### 算法实现细节
+### 关键算法
 
-#### 1. 鸟群个体(Boid)类
+1. **空间网格优化**: 将空间划分为网格，减少邻近检测复杂度
+2. **向量数学**: 自定义Vector和Vector3D类处理位置和速度计算
+3. **性能监控**: 实时FPS统计，内存使用监控
+
+### 代码模块
+
+- `src/js/2d/boid.js`: 2D鸟群个体类
+- `src/js/3d/boid3D.js`: 3D鸟群个体类
+- `src/js/utils/Vector3D.js`: 3D向量数学库
+- `src/js/utils/performance-monitor.js`: 性能监控系统
+
+## 📈 性能特性
+
+- **优化算法**: 使用空间网格减少O(n²)复杂度到近似O(n)
+- **实时监控**: FPS、内存使用、渲染时间等指标
+- **动态调节**: 根据性能自动优化参数
+- **大规模支持**: 可支持数百个个体的实时模拟
+
+## 🔧 扩展开发
+
+### 添加新行为
+
+在`Boid`或`Boid3D`类中添加新的行为方法：
+
 ```javascript
-class Boid {
-    constructor(x, y) {
-        this.position = new Vector(x, y);     // 位置向量
-        this.velocity = Vector.random2D();    // 速度向量
-        this.acceleration = new Vector(0, 0); // 加速度向量
-        this.maxForce = 0.2;                 // 最大转向力
-        this.maxSpeed = 4;                   // 最大速度
-    }
+// 示例：添加觅食行为
+seek(target) {
+    let force = Vector.sub(target, this.position);
+    force.normalize();
+    force.mult(this.maxSpeed);
+    force.sub(this.velocity);
+    force.limit(this.maxForce);
+    return force;
 }
 ```
 
-#### 2. 三大核心行为算法
+### 自定义渲染
 
-**分离行为 (Separation)**:
-- 感知半径: 50像素
-- 计算与邻近个体的反向力
-- 距离越近，排斥力越强 (反平方定律)
+修改`draw`方法来自定义个体外观：
 
-**对齐行为 (Alignment)**:
-- 感知半径: 50像素  
-- 计算邻近个体的平均速度方向
-- 调整自身速度向量趋向平均方向
-
-**内聚行为 (Cohesion)**:
-- 感知半径: 100像素
-- 计算邻近个体的重心位置
-- 产生向重心移动的转向力
-
-#### 3. 向量数学运算
 ```javascript
-// 2D向量类支持的运算
-- add(): 向量加法
-- sub(): 向量减法  
-- mult(): 标量乘法
-- div(): 标量除法
-- mag(): 计算模长
-- setMag(): 设置模长
-- limit(): 限制最大模长
+draw(ctx) {
+    // 自定义绘制逻辑
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.position.x, this.position.y, 5, 5);
+}
 ```
 
-#### 4. 边界处理
-- **2D模式**: 环绕边界(Wrapping) - 个体飞出边界时从对侧重新进入
-- **3D模式**: 边界反弹 - 在立方体空间内运动
+## 🤝 贡献指南
 
-#### 5. 渲染优化
-- **2D渲染**: 使用Canvas的requestAnimationFrame优化动画
-- **3D渲染**: Three.js的网格实例化减少几何体创建开销
-- **视锥裁剪**: 只渲染相机视野内的对象
+1. Fork 项目
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 打开 Pull Request
 
-### 性能特性
+## 📝 许可证
 
-1. **空间分割**: 邻居搜索算法优化，避免O(n²)复杂度
-2. **向量池化**: 减少频繁的对象创建和垃圾回收
-3. **GPU加速**: 3D模式利用WebGL硬件加速渲染
-4. **自适应质量**: 根据性能动态调整渲染质量
+本项目基于 MIT 许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情
 
-### 使用说明
+## 📞 联系方式
 
-1. **启动项目**: 直接在浏览器中打开`index.html`
-2. **切换模式**: 点击"2D Simulation"或"3D Simulation"标签
-3. **调整参数**:
-   - 拖拽"Flock Size"滑块改变群体数量
-   - 调整"Alignment"、"Cohesion"、"Separation"权重观察行为变化
-4. **3D交互**: 在3D模式下可以用鼠标拖拽旋转视角，滚轮缩放
+- 项目链接: [https://github.com/yourusername/boid-algorithm](https://github.com/yourusername/boid-algorithm)
+- 问题反馈: [Issues](https://github.com/yourusername/boid-algorithm/issues)
 
-### 扩展可能性
+## 🙏 致谢
 
-- 添加障碍物避让行为
-- 实现捕食者-猎物动态
-- 引入环境因素(风力、重力)
-- 支持不同种类的群体交互
-- 数据可视化和行为分析工具
+- [Craig Reynolds](http://www.red3d.com/cwr/boids/) - 鸟群算法的原创者
+- [Three.js](https://threejs.org/) - 3D渲染库
+- [MDN Web Docs](https://developer.mozilla.org/) - 优秀的Web开发文档 

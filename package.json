@@ -1,0 +1,34 @@
+{
+  "name": "boid-algorithm-simulator",
+  "version": "1.0.0",
+  "description": "一个基于JavaScript的鸟群算法（Boids Algorithm）模拟器，支持2D和3D可视化",
+  "main": "index.html",
+  "keywords": [
+    "boids",
+    "flocking",
+    "algorithm",
+    "simulation",
+    "canvas",
+    "threejs",
+    "javascript",
+    "visualization"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/boid-algorithm.git"
+  },
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'No build process needed for this static project'",
+    "lint": "echo 'Add linting tools as needed'",
+    "test": "echo 'Add tests as needed'"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=12.0.0"
+  }
+} 
